@@ -10,3 +10,5 @@ You can also update each of them separately.
 Discord : yanisselt  or just come here https://discord.gg/rtxremix in GTA SA channel if you have any question about the app or the mod.
 
 Enjoy the mod !
+
+![screenshot](https://github.com/user-attachments/assets/b3adf851-30ef-406c-bdbb-36e53d9c60fc)
