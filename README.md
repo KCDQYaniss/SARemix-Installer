@@ -17,6 +17,6 @@ DK22Pac for Pedspec and Improved Vehicle Features (ImVehFt)
 
 ThirteenAG and Junior_Djjr for Essentials, Mixsets, Improved Streaming, OpenLimitAdjuster and VehFuncs
 
-If any of you wants me to remove the mods from here, contact me on Discord : yanisselt
+If any of you wants me to remove the mods from here or if I forgot someone in the credits, contact me on Discord : yanisselt
 
 ![screenshot](https://github.com/user-attachments/assets/b3adf851-30ef-406c-bdbb-36e53d9c60fc)
