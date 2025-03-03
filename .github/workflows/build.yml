@@ -3,6 +3,8 @@ name: Build SARemix Installer
 on:
   push:
     branches: [ main ]
+    tags:
+      - 'v*'
   pull_request:
     branches: [ main ]
   workflow_dispatch:
@@ -40,3 +42,10 @@ jobs:
       with:
         name: SARemix_Installer
         path: dist/SARemix_InstallerV1.3.exe
+
+    - name: Create Release
+      if: startsWith(github.ref, 'refs/tags/v')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: dist/SARemix_InstallerV1.3.exe
+        generate_release_notes: true
