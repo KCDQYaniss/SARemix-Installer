@@ -40,11 +40,18 @@ jobs:
       run: |
         pyinstaller --noconfirm --onefile --windowed --add-data "7zip;7zip/" --icon=NONE SARemix_InstallerV1.3.py
 
+    - name: Create Release Package
+      run: |
+        mkdir release_package
+        Copy-Item "dist/SARemix_InstallerV1.3.exe" -Destination "release_package/"
+        Copy-Item "7zip" -Destination "release_package/7zip" -Recurse
+        Compress-Archive -Path "release_package/*" -DestinationPath "SARemix_InstallerV1.3.zip"
+
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: SARemix_InstallerV1.3
-        path: dist/SARemix_InstallerV1.3.exe
+        path: SARemix_InstallerV1.3.zip
 
     - name: Create Release
       if: startsWith(github.ref, 'refs/tags/v')
@@ -53,5 +60,5 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         name: SARemix_InstallerV1.3
-        files: dist/SARemix_InstallerV1.3.exe
+        files: SARemix_InstallerV1.3.zip
         generate_release_notes: true
