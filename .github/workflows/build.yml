@@ -1,0 +1,42 @@
+name: Build SARemix Installer
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Verify 7zip folder
+      run: |
+        if (-not (Test-Path "7zip")) {
+            Write-Error "7zip folder not found in repository"
+            exit 1
+        }
+
+    - name: Build with PyInstaller
+      run: |
+        pyinstaller --noconfirm --onefile --windowed --add-data "7zip;7zip/" --icon=NONE SARemix_InstallerV1.3.py
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: SARemix_Installer
+        path: dist/SARemix_InstallerV1.3.exe 
