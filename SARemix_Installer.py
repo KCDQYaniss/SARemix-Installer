@@ -1,6 +1,4 @@
 import requests
-from io import BytesIO
-from PIL import Image
 import os
 from pathlib import Path
 import requests
@@ -9,15 +7,11 @@ from urllib3.util.retry import Retry
 import threading
 import re
 import zipfile
-import io
 import logging
 from threading import Event
 import customtkinter as ctk
 import time
 from tkinter import messagebox, filedialog
-from PIL import Image
-from io import BytesIO
-import patoolib
 import subprocess
 import sys
 
@@ -54,32 +48,24 @@ class SARemixInstaller(ctk.CTk):
         self.welcome_frame.grid_rowconfigure(4, weight=1)
 
         welcome_title = ctk.CTkLabel(self.welcome_frame, text="Welcome to the SA Remix Auto-Installer !",
-                                     font=ctk.CTkFont(size=28, weight="bold"))
+                                 font=ctk.CTkFont(size=28, weight="bold"))
         welcome_title.grid(row=0, column=0, pady=(0, 40))
 
         info_text = ("Download speed will depend on a lot of stuff, hard drive speeds, your internet, "
-                     "github speeds and updates to the mod that could make it heavier.")
+                 "github speeds and updates to the mod that could make it heavier.")
         info_label = ctk.CTkLabel(self.welcome_frame, text=info_text, wraplength=700)
         info_label.grid(row=1, column=0, pady=(0, 40))
 
         contact_text = ("If you have any issues with the app, just ask on the RTX Remix Showcase discord "
-                        "GTA SA channel, or contact me on discord : yanisselt")
+                    "GTA SA channel, or contact me on discord : yanisselt")
         contact_label = ctk.CTkLabel(self.welcome_frame, text=contact_text, wraplength=700)
         contact_label.grid(row=2, column=0, pady=(0, 40))
 
-        # Add this code to load and display the image
-        image_url = "https://www.cowcotland.com/images.php?url=images/news/2023/06/rtx.jpg"
-        response = requests.get(image_url)
-        img = Image.open(BytesIO(response.content))
-        ctk_image = ctk.CTkImage(light_image=img, dark_image=img, size=(700, 330))
-        
-        image_label = ctk.CTkLabel(self.welcome_frame, image=ctk_image, text="")
-        image_label.grid(row=3, column=0, pady=(0, 20))
-
         next_button = ctk.CTkButton(self.welcome_frame, text="Next", command=self.show_main_page,
-                                    fg_color="transparent", border_width=1, border_color="#FFCC70",
-                                    hover_color="#5c5c5a", width=100)
-        next_button.grid(row=4, column=0, pady=(0, 10), padx=(0, 10), sticky="se")
+                                fg_color="transparent", border_width=1, border_color="#FFCC70",
+                                hover_color="#5c5c5a", width=100)
+        next_button.grid(row=3, column=0, pady=(0, 10), padx=(0, 10), sticky="se")
+
 
     def show_main_page(self):
         self.welcome_frame.grid_forget()
@@ -556,6 +542,7 @@ class SARemixInstaller(ctk.CTk):
                     event.set()
 
         threading.Thread(target=download_thread).start()
+
 
     def Download_all(self):
         if not self.folder_selected:
