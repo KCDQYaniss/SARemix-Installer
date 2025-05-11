@@ -11,7 +11,7 @@ import logging
 from threading import Event
 import customtkinter as ctk
 import time
-from tkinter import messagebox, filedialog
+from tkinter import messagebox, filedialog, Toplevel, Label
 import subprocess
 import sys
 
@@ -21,6 +21,42 @@ logging.basicConfig(filename='sa_remix_installer.log', level=logging.INFO,
 
 ctk.set_appearance_mode("Dark")
 ctk.set_default_color_theme("blue")
+
+class ToolTip:
+    def __init__(self, widget, text):
+        self.widget = widget
+        self.text = text
+        self.tooltip = None
+        self.widget.bind("<Enter>", self.enter)
+        self.widget.bind("<Leave>", self.leave)
+
+    def enter(self, event=None):
+        x, y, _, _ = self.widget.bbox("insert")
+        x += self.widget.winfo_rootx() + 25
+        y += self.widget.winfo_rooty() + 25
+        self.tooltip = Toplevel(self.widget)
+        self.tooltip.wm_overrideredirect(True)
+        self.tooltip.wm_geometry(f"+{x}+{y}")
+        
+        # Create a frame with rounded corners effect
+        frame = ctk.CTkFrame(self.tooltip, fg_color="#2b2b2b", corner_radius=10, border_width=1, border_color="#FFCC70")
+        frame.pack(fill="both", expand=True, padx=2, pady=2)
+        
+        # Create the label with customtkinter style
+        label = ctk.CTkLabel(frame, 
+                           text=self.text,
+                           text_color="#FFCC70",
+                           font=("Segoe UI", 12),
+                           wraplength=300,
+                           justify="left",
+                           padx=10,
+                           pady=5)
+        label.pack(fill="both", expand=True)
+
+    def leave(self, event=None):
+        if self.tooltip:
+            self.tooltip.destroy()
+            self.tooltip = None
 
 class SARemixInstaller(ctk.CTk):
     def __init__(self):
@@ -88,6 +124,7 @@ class SARemixInstaller(ctk.CTk):
 
         self.select_button = ctk.CTkButton(self.directory_frame, text="Select Directory", command=self.select_folder, width=150, fg_color="transparent", border_width=1, border_color="#FFCC70", hover_color="#5c5c5a")
         self.select_button.grid(row=0, column=0, padx=(50, 5), pady=(25, 25))
+        ToolTip(self.select_button, "Select the directory where you want to install SA Remix")
 
         self.directory_label = ctk.CTkLabel(self.directory_frame, text="No directory selected", anchor='w', width=500)
         self.directory_label.grid(row=0, column=1, sticky="ew", padx=(5, 10), pady=5)
@@ -106,6 +143,7 @@ class SARemixInstaller(ctk.CTk):
 
         self.Download_all_button = ctk.CTkButton(self.left_frame, text="Download All", command=self.Download_all, fg_color="transparent", border_width=1, border_color="#FFCC70", width=200, hover_color="#5c5c5a")
         self.Download_all_button.grid(row=0, column=0, pady=20)
+        ToolTip(self.Download_all_button, "Download everything needed, only button you need to press if you're lucky !")
 
         self.download_status_label = ctk.CTkLabel(self.left_frame, text="Status: Not started", width=360)
         self.download_status_label.grid(row=1, column=0, pady=2, padx=20)
@@ -126,16 +164,19 @@ class SARemixInstaller(ctk.CTk):
 
         self.update1 = ctk.CTkButton(self.right_frame, text="Update SA Remix", command=self.Download_SARemix, fg_color="transparent", border_width=1, border_color="#FFCC70", width=200, hover_color="#5c5c5a")
         self.update1.grid(row=0, column=0, pady=(5, 0))
+        ToolTip(self.update1, "Update SA Remix to its latest version available !")
         self.update1_status = ctk.CTkLabel(self.right_frame, text="Waiting for download", width=200)
         self.update1_status.grid(row=1, column=0, pady=(0, 5))
 
         self.update2 = ctk.CTkButton(self.right_frame, text="Update SA Remix necessary mods", command=self.Download_SARemix_Necessary_Mods, fg_color="transparent", border_width=1, border_color="#FFCC70", width=200, hover_color="#5c5c5a")
         self.update2.grid(row=2, column=0, pady=(5, 0))
+        ToolTip(self.update2, "Update SA Remix necessary mods to its latest version available !")
         self.update2_status = ctk.CTkLabel(self.right_frame, text="Waiting for download", width=200)
         self.update2_status.grid(row=3, column=0, pady=(0, 5))
 
         self.update_rtx_remix = ctk.CTkButton(self.right_frame, text="Update RTX Remix", command=lambda: self.Download_RTX_Remix("NVIDIAGameWorks", "rtx-remix"), fg_color="transparent", border_width=1, border_color="#FFCC70", width=200, hover_color="#5c5c5a")
         self.update_rtx_remix.grid(row=4, column=0, pady=(5, 0))
+        ToolTip(self.update_rtx_remix, "Update RTX Remix to its latest version available !")
         self.update_rtx_remix_status = ctk.CTkLabel(self.right_frame, text="Waiting for download", width=200)
         self.update_rtx_remix_status.grid(row=5, column=0, pady=(0, 5))
 
@@ -150,7 +191,8 @@ class SARemixInstaller(ctk.CTk):
                                                     fg_color="transparent", border_width=1, 
                                                     border_color="#FFCC70", width=200, 
                                                     hover_color="#5c5c5a")
-        self.install_remix_button.grid(row=0, column=0, pady=25, padx=20)  # Increased padding
+        self.install_remix_button.grid(row=0, column=0, pady=25, padx=20)
+        ToolTip(self.install_remix_button, "Install remix 0.5.4 version, less performant but no memory leak, better if you have low RAM or VRAM, or if 1.0.0 crashes and stutters for you")
 
         # New button for Install RTX Remix config
         self.install_rtx_config_button = ctk.CTkButton(self.install_frame, text="Install RTX Remix config", 
@@ -158,7 +200,8 @@ class SARemixInstaller(ctk.CTk):
                                                   fg_color="transparent", border_width=1, 
                                                   border_color="#FFCC70", width=200, 
                                                   hover_color="#5c5c5a")
-        self.install_rtx_config_button.grid(row=0, column=1, pady=25, padx=20)  # Increased padding
+        self.install_rtx_config_button.grid(row=0, column=1, pady=25, padx=20)
+        ToolTip(self.install_rtx_config_button, "Download and install the RTX Remix config, could fix some issues")
 
     def install_rtx_config(self):
         if not self.folder_selected:
